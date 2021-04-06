@@ -1,9 +1,25 @@
-<p id="notice"><%= notice %></p>
+<%= content_tag :h1, @chat_room.name, class: 'text-center' %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @chat_room.name %>
-</p>
+<!--div class="d-flex flex-md-row flex-column">
+  <%= link_to :Edit, edit_chat_room_path(@chat_room), class: 'btn btn-primary m-1' %>
+  <%= link_to :Back, chat_rooms_path, class: 'btn btn-light m-1' %>
+</div-->
 
-<%= link_to 'Edit', edit_chat_room_path(@chat_room) %> |
-<%= link_to 'Back', chat_rooms_path %>
+<section class="mt-5">
+  <%= content_tag :div, class: 'messages-container', 'data-chat-room' => @chat_room.name do %>
+    <div class="messages-container" data-chat-room="<%= @chat_room.name %>">
+      <%= render @messages %>
+    </div>
+
+    <% if @messages.empty? %>
+      <p class="empty-chat display-2 text-muted text-center">
+        No messages found :(
+      </p>
+    <% end %>
+  <% end %>
+
+</section>
+
+<section class="mt-5">
+  <%= render partial: '/chat_messages/form', locals: { chat_room: @chat_room } %>
+</section>

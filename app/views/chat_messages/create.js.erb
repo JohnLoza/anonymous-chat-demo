@@ -1,0 +1,6 @@
+<% if @chat_message.persisted? %>
+  chatMessageBody = document.getElementById('chat_message_body');
+  chatMessageBody.value = '';
+<% else %>
+  alert('We cant save the message');
+<% end %>

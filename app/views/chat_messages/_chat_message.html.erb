@@ -1,0 +1,7 @@
+<div class="message">
+  <label class="text-muted">
+    <%= content_tag :strong, chat_message.from %> at
+    <%= content_tag :span, I18n.l(chat_message.created_at, format: :long) %>
+  </label>
+  <%= content_tag :p, chat_message.body %>
+</div>

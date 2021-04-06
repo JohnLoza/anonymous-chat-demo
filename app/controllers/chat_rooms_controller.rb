@@ -3,11 +3,12 @@ class ChatRoomsController < ApplicationController
 
   # GET /chat_rooms or /chat_rooms.json
   def index
-    @chat_rooms = ChatRoom.all.search(query_params)
+    @chat_rooms = ChatRoom.search(query_params).last(50)
   end
 
   # GET /chat_rooms/1 or /chat_rooms/1.json
   def show
+    @messages = @chat_room.chat_messages.last(50)
   end
 
   # GET /chat_rooms/new

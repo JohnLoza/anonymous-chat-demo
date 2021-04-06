@@ -1,4 +1,5 @@
 class ChatMessagesController < ApplicationController
+  before_action :set_chat_room, only: %i[ create ]
   before_action :set_chat_message, only: %i[ show edit update destroy ]
 
   # GET /chat_messages or /chat_messages.json
@@ -21,16 +22,19 @@ class ChatMessagesController < ApplicationController
 
   # POST /chat_messages or /chat_messages.json
   def create
-    @chat_message = ChatMessage.new(chat_message_params)
+    @chat_message = @chat_room.chat_messages.build(chat_message_params)
 
     respond_to do |format|
       if @chat_message.save
-        format.html { redirect_to @chat_message, notice: "Chat message was successfully created." }
+        ActionCable.server.broadcast("chat_#{@chat_room.name}", @chat_message)
+        format.html { redirect_to @chat_room, notice: "Chat message was successfully created." }
         format.json { render :show, status: :created, location: @chat_message }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @chat_message.errors, status: :unprocessable_entity }
       end
+
+      format.js { render :create }
     end
   end
 
@@ -57,6 +61,10 @@ class ChatMessagesController < ApplicationController
   end
 
   private
+    def set_chat_room
+      @chat_room = ChatRoom.find(params[:chat_room_id])
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_chat_message
       @chat_message = ChatMessage.find(params[:id])

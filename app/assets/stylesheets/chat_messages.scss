@@ -1,3 +1,12 @@
 // Place all the styles related to the chat_messages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.message {
+  background-color: #dfdfdf;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  padding: 5px;
+  p { margin: 0; }
+}

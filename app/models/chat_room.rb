@@ -1,5 +1,7 @@
 class ChatRoom < ApplicationRecord
   before_validation :format_name
+  # can also use dependent: :destroy, however it will execute one query per object
+  has_many :chat_messages, dependent: :delete_all
 
   NAME_REGEX = /\A[a-z0-9\-\_]+\z/i
   validates :name,
