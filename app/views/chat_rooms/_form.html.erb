@@ -1,0 +1,26 @@
+<%= form_with(model: chat_room) do |form| %>
+  <% if chat_room.errors.any? %>
+    <div id="error_explanation">
+      <p class="lead font-weight-bold">
+        <%= pluralize(chat_room.errors.count, "error") %> prohibited this chat_room from being saved:
+      </p>
+
+      <ul>
+        <% chat_room.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: 'form-control', maxlength: 20 %>
+  </div>
+
+  <section class="d-flex flex-md-row flex-column ">
+    <%= form.submit :Save, class: 'btn btn-primary m-1' %>
+    <%= link_to :Connect, chat_room, class: 'btn btn-light m-1' if chat_room.persisted? %>
+    <%= link_to :Back, chat_rooms_path, class: 'btn btn-light m-1' %>
+  </section>
+<% end %>

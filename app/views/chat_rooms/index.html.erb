@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Chat Rooms</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="3">
+        <%= form_with url: chat_rooms_path, method: :get do |f| %>
+          <%= f.text_field :q, class: 'form-control',
+                value: query_params, placeholder: 'Search' %>
+        <% end %>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @chat_rooms.each do |chat_room| %>
+      <tr>
+        <td><%= chat_room.name %></td>
+        <td><%= link_to :Connect, chat_room %></td>
+        <td><%= link_to :Edit, edit_chat_room_path(chat_room) %></td>
+        <td><%= link_to :Destroy, chat_room, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Chat Room', new_chat_room_path, class: 'btn btn-primary' %>

@@ -1,0 +1,14 @@
+<h1>Set an Username</h1>
+
+<section class="row">
+  <div class="col">
+    <%= form_with url: sessions_path, method: :post do |f| %>
+      <div class="form-group">
+        <%= f.label :username %>
+        <%= f.text_field :username, class: 'form-control', maxlength: 15 %>
+      </div>
+
+      <%= f.submit :Save, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+</section>
