@@ -26,7 +26,10 @@ class ChatMessagesController < ApplicationController
 
     respond_to do |format|
       if @chat_message.save
-        ActionCable.server.broadcast("chat_#{@chat_room.name}", @chat_message)
+        ActionCable.server.broadcast("chat_#{@chat_room.name}",
+          data: @chat_message.as_json,
+          html: render_to_string('chat_messages/_chat_message', locals: { chat_message: @chat_message }, layout: false)
+        )
         format.html { redirect_to @chat_room, notice: "Chat message was successfully created." }
         format.json { render :show, status: :created, location: @chat_message }
       else

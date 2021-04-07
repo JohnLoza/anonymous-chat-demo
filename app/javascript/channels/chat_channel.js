@@ -1,8 +1,11 @@
 import consumer from './consumer';
 
+if (!window.openedChats)
+  window.openedChats = [];
+
 window.subscribeToChat = (chat_name) => {
   console.log("-> subscribing to chat: ", chat_name);
-  consumer.subscriptions.create({ channel: "ChatChannel", room: chat_name }, {
+  const conn = consumer.subscriptions.create({ channel: "ChatChannel", room: chat_name }, {
     connected() {
       console.log('-> Connection established for channel: ', chat_name);
     },
@@ -17,9 +20,8 @@ window.subscribeToChat = (chat_name) => {
     },
 
     appendLine(data) {
-      const html = this.createLine(data)
       const element = document.querySelector(`[data-chat-room='${chat_name}']`)
-      element.insertAdjacentHTML("beforeend", html)
+      element.insertAdjacentHTML("beforeend", data.html)
     },
 
     removeEmptyMessage() {
@@ -28,25 +30,28 @@ window.subscribeToChat = (chat_name) => {
       if (element) {
         element.remove();
       }
-    },
-
-    createLine(message) {
-      return `
-        <div class="message">
-          <label class="text-muted">
-            <strong>${message.from}</strong> at
-            <span>${message.created_at}
-          </label>
-          <p>${message.body}</p>
-        </div>
-      `
     }
   });
+
+  window.openedChats.push(conn);
 }
 
 document.addEventListener("turbolinks:load", () => {
-  let chatContainer = document.querySelector('[data-chat-room]');
-  if (chatContainer) {
-    subscribeToChat(chatContainer.dataset.chatRoom);
-  }
+  const chatContainer = document.querySelector('[data-chat-room]');
+  if (chatContainer == null)
+    return;
+
+  const chatRoom = chatContainer.dataset.chatRoom;
+  let chatConnection = null;
+
+  openedChats.forEach(conn => {
+    const json = JSON.parse(conn.identifier);
+    if (json.channel == "ChatChannel" && json.room == chatRoom)
+      chatConnection = conn;
+  });
+
+  if (chatConnection != null)
+    return;
+
+  subscribeToChat(chatContainer.dataset.chatRoom);
 });
